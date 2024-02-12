@@ -1,20 +1,15 @@
-import { useCallback, useState } from "react";
+import { useState } from "react";
 
 export interface CustomState<T> {
     get: () => T;
     set: (value: T) => void;
 }
 
-export function useCustomState<T>(initialValue: T) {
-    const [state, setState] = useState(initialValue);
-
-    const set = useCallback((newState: T) => {
-        setState(newState);
-    }, []);
-
-    const get = useCallback(() => {
+export function useCustomState<T>(initialValue: T): CustomState<T>{
+    const [state, set] = useState(initialValue);
+    const get = () => {
         return state;
-    }, [state]);
+    };
 
     return { get, set };
 }
@@ -28,7 +23,15 @@ export interface LoginData {
     school: string | null;
     classes: string[] | null;
     profilePicUrl: string | null;
+    isLogged: boolean;
+}
 
+export interface SignUpData {
+    name: string;
+    email: string;
+    username: string;
+    password: string;
+    confirmPassword: string;
 }
 
 export class LoginState implements LoginData {
