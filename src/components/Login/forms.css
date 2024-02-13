@@ -1,0 +1,82 @@
+/* forms.css */
+
+/* Color Palette */
+:root {
+  --raisin-black: #212227;
+  --midnight-green: #004346;
+  --saffron: #F4A261;
+  --alice-blue: #EDF6F9;
+  --cerulean-crayola: #b2cfc9;
+  --honeydew: #E8F0F2;
+  --independence: #4a759b;
+  --emerald: #2BAE66;
+}
+
+/* Form Layout */
+.form-container {
+  background-color: var(--alice-blue);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  margin: 20px auto;
+  margin-top: 15%;
+  color: var(--independence);
+}
+
+.form-heading {
+  color: var(--raisin-black);
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.form-field {
+  width: 80%;
+  margin: 0 auto;
+  margin-bottom: 15px;
+  border-radius: 5px;
+}
+
+.form-field label {
+  display: block;
+  color: var(--midnight-green);
+  margin-bottom: 5px;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-weight: bold;
+}
+
+.form-field input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid var(--cerulean-crayola);
+  background-color: var(--honeydew);
+  color: var(--midnight-green);
+}
+
+.form-field input:focus {
+  outline: 2px solid var(--cerulean-crayola);
+  border-color: var(--cerulean-crayola);
+}
+
+.form-submit {
+  margin-left: 40%;
+}
+/* Button Styles */
+.form-button {
+  width: 30%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: var(--saffron);
+  color: var(--raisin-black);
+  cursor: pointer;
+  transition: background-color 0.3s;
+  max-width: 150px;
+  min-width: 80px;
+}
+
+.form-button:hover {
+  background-color: var(--emerald);
+  color: var(--alice-blue);
+}
