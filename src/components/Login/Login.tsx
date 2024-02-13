@@ -1,17 +1,27 @@
+import { Api } from '../api/api';
+import { CustomState, LoginState, activePage, useCustomState, handleLogin } from '../utils';
 import './forms.css';
 import React, { useState, FormEvent } from 'react';
 
-export default function Login() {
-    const [username, setUsername] = useState<string>('');
-    const [password, setPassword] = useState<string>('');
+interface LoginProps {
+    api: Api;
+    loginState: CustomState<LoginState>;
+    activePageState: CustomState<activePage>;
+}
+
+
+export default function Login({ api, loginState, activePageState }: LoginProps) {
+    const username = useCustomState<string>('');
+    const password = useCustomState<string>('');
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-        event.preventDefault(); // Prevent the default form submit action
-        // Handle the login logic here, e.g., calling an authentication API
-        console.log('Logging in with:', username, password);
-        // Reset form fields after submission
-        setUsername('');
-        setPassword('');
+        event.preventDefault();
+        api.login(username.get(), password.get()).then((response) => {
+            handleLogin(loginState, activePageState, response);
+            console.log('cookie updated to:', document.cookie);
+        }).catch((error) => {
+            console.error(error);
+        });
     };
 
     return (
@@ -23,8 +33,8 @@ export default function Login() {
                     <input
                         type="text"
                         id="username"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
+                        value={username.get()}
+                        onChange={(e) => username.set(e.target.value)}
                         required
                     />
                 </div>
@@ -33,8 +43,8 @@ export default function Login() {
                     <input
                         type="password"
                         id="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        value={password.get()}
+                        onChange={(e) => password.set(e.target.value)}
                         required
                     />
                 </div>

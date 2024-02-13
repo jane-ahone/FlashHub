@@ -52,11 +52,13 @@ export default function Navbar(props: NavbarProps): JSX.Element {
                     switch (activePageState.get()) {
                         case "signup":
                             return <Button color="inherit" onClick={() => handleClick("login")}  >Login  </Button>;
-                        case "loading":
+                        case "login":
                             return <Button color="inherit" onClick={() => handleClick("signup")}>  SignUp  </Button>;
                         default:
-                            return (
-                                <Box sx={{ flexGrow: 0 }}>
+                            const items = [
+                                (<Button color="inherit" sx={{ '&': { padding: '0px 20px' } }} onClick={() => handleClick("login")}  >Login  </Button>),
+                                (<Button color="inherit" sx={{ '&': { padding: '0px 20px' } }} onClick={() => handleClick("signup")}>  SignUp  </Button>),
+                                (<Box sx={{ flexGrow: 0 }}>
                                     <Tooltip title="Open settings">
                                         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                                             <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
@@ -74,12 +76,12 @@ export default function Navbar(props: NavbarProps): JSX.Element {
                                         anchorEl={anchorElUser}
                                         anchorOrigin={{
                                             vertical: 'top',
-                                            horizontal: 'right',
+                                            horizontal: 'left',
                                         }}
                                         keepMounted
                                         transformOrigin={{
                                             vertical: 'top',
-                                            horizontal: 'right',
+                                            horizontal: 'left',
                                         }}
                                         open={Boolean(anchorElUser)}
                                         onClose={handleCloseUserMenu}
@@ -97,8 +99,9 @@ export default function Navbar(props: NavbarProps): JSX.Element {
                                             </MenuItem>
                                         ))}
                                     </Menu>
-                                </Box>
-                            )
+                                </Box>),
+                            ]
+                            return items;
                     }
                 })()}
 

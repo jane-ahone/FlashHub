@@ -5,7 +5,7 @@ export interface CustomState<T> {
     set: (value: T) => void;
 }
 
-export function useCustomState<T>(initialValue: T): CustomState<T>{
+export function useCustomState<T>(initialValue: T): CustomState<T> {
     const [state, set] = useState(initialValue);
     const get = () => {
         return state;
@@ -14,16 +14,18 @@ export function useCustomState<T>(initialValue: T): CustomState<T>{
     return { get, set };
 }
 
+
+
 export interface LoginData {
-    username: string | null;
-    jwt: string | null;
-    name: string | null;
-    email: string | null;
-    id: string | null;
-    school: string | null;
-    classes: string[] | null;
-    profilePicUrl: string | null;
+    username: string;
+    jwt: string;
+    name: string;
+    email: string;
+    id: string;
+    school: string;
+    profilePicUrl: string;
     isLogged: boolean;
+    expiry: number;
 }
 
 export interface SignUpData {
@@ -35,25 +37,25 @@ export interface SignUpData {
 }
 
 export class LoginState implements LoginData {
-    username: string | null;
+    username: string;
     isLogged: boolean;
-    jwt: string | null;
-    name: string | null;
-    email: string | null;
-    id: string | null;
-    school: string | null;
-    classes: string[] | null;
-    profilePicUrl: string | null;
+    jwt: string;
+    name: string;
+    email: string;
+    id: string;
+    school: string;
+    profilePicUrl: string;
+    expiry: number;
     constructor(
-        username: string | null = null,
-        jwt: string | null = null,
-        name: string | null = null,
-        email: string | null = null,
-        id: string | null = null,
-        school: string | null = null,
-        classes: string[] | null = null,
-        profilePicUrl: string | null = null,
+        username: string = '',
+        jwt: string = '',
+        name: string = '',
+        email: string = '',
+        id: string = '',
+        school: string = '',
+        profilePicUrl: string = '',
         isLogged: boolean = false,
+        expiry: number = 0,
     ) {
         this.isLogged = isLogged;
         this.username = username;
@@ -62,9 +64,32 @@ export class LoginState implements LoginData {
         this.email = email;
         this.id = id;
         this.school = school;
-        this.classes = classes;
         this.profilePicUrl = profilePicUrl;
+        this.expiry = expiry;
     }
 }
 
-export type activePage = "login" | "signup" | "home" | "profile" | "class" | "settings" | "logout" | "loading";
+export type activePage = "login" | "signup" | "home" | "profile" | "class" | "settings" | "logout" | "flashcard";
+
+export function parseCookies(): LoginData {
+    const cookies: any = {};
+    document.cookie.split(';').forEach(function (cookie) {
+        const [name, value] = cookie.split('=').map(c => c.trim());
+        if (name !== 'path' && name !== 'expires') { cookies[name] = decodeURIComponent(value); }
+    });
+    return cookies as LoginData;
+}
+
+export function updateCookie(data: LoginData) {
+    const keys = Object.keys(data) as Array<keyof LoginData>; // Type assertion
+    const cookieString = keys.map(key => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`).join('; ') + '; expires=' + new Date(data.expiry * 1000).toUTCString() + '; path=/';
+    document.cookie = cookieString;
+    console.log('cookieString:', cookieString);
+}
+
+export function handleLogin(loginState: CustomState<LoginState>, activePage: CustomState<activePage>, response: LoginData) {
+    loginState.set(response);
+    activePage.set("flashcard");
+    updateCookie(response);
+    console.log('Signup successful:', response);
+}

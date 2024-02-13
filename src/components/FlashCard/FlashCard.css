@@ -1,0 +1,59 @@
+/* Color Palette */
+:root {
+    --raisin-black: #212227;
+    --midnight-green: #004346;
+    --saffron: #F4A261;
+    --alice-blue: #8fbce6;
+    --cerulean-crayola: #b2cfc9;
+    --honeydew: #E8F0F2;
+    --independence: #4a609b;
+    --emerald: #2BAE66;
+}
+
+.flashcard {
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 20px;
+    text-align: center;
+    width: 50%;
+    min-width: 300px;
+    max-width: 700px;
+    margin: 50px auto;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    background-color: var(--raisin-black);
+    color: var(--honeydew);
+
+}
+
+.question {
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+.answers button {
+    margin: 5px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--independence);
+    background-color: var(--raisin-black);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.feedback {
+    margin-top: 20px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.correct {
+    color: var(--emerald);
+}
+
+.incorrect {
+    color: red;
+}

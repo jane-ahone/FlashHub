@@ -1,5 +1,5 @@
 import { FormEvent } from 'react';
-import { useCustomState, LoginState, CustomState, activePage } from '../utils';
+import { useCustomState, LoginState, CustomState, activePage, handleLogin } from '../utils';
 import { Api } from '../api/api';
 interface SignupProps {
     api: Api;
@@ -16,12 +16,10 @@ export default function Signup(props: SignupProps): JSX.Element {
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        // Add your signup logic here, e.g., form validation, sending data to a server, etc.
         console.log('Signing up with:', name.get(), email.get(), userName.get(), password.get(), confirmPassword.get());
         props.api.signup(name.get(), email.get(), userName.get(), password.get()).then((response) => {
-            props.loginState.set(response);
-            props.activePageState.set("profile");
-            console.log('Signup successful:', props.loginState.get());
+            handleLogin(props.loginState, props.activePageState, response);
+            console.log('cookie updated to:', document.cookie);
         }).catch((error) => {
             console.error(error);
         });
