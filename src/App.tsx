@@ -45,8 +45,6 @@ function App() {
             <Navbar loginState={loginState} activePageState={activePageState} />
             {(() => {
                 switch (activePageState.get()) {
-                    case "signup":
-                        return <Signup api={api} loginState={loginState} activePageState={activePageState} />;
                     case "flashcard":
                         return <FlashCard cards={cards} />;
                     default:

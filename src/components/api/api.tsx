@@ -1,6 +1,34 @@
 import { LoginData } from "../utils";
 import { Card } from "../FlashCard/utils";
+import { jwtVerify, importJWK } from 'jose';
 
+
+
+const googleJWKSUri = 'https://www.googleapis.com/oauth2/v3/certs';
+
+async function verifyAndDecodeJWT(token: string) {
+    try {
+        const { payload, protectedHeader } = await jwtVerify(token, async (header) => {
+            // Fetch Google's JWKS (JSON Web Key Set)
+            const response = await fetch(googleJWKSUri);
+            const jwks = await response.json();
+
+            // Find the correct key in the JWKS by matching the 'kid' (key ID)
+            const signingKey = jwks.keys.find((key: { kid: string | undefined; }) => key.kid === header.kid);
+            if (!signingKey) {
+                throw new Error('Signing key not found in JWKS');
+            }
+
+            // Construct and return the appropriate public key to verify the JWT
+            return await importJWK(signingKey, header.alg);
+        }, {
+            issuer: 'https://accounts.google.com',
+        });
+        return payload;
+    } catch (error) {
+        console.error('Failed to verify JWT:', error);
+    }
+}
 
 export class Api {
     private baseUrl = 'http://localhost:3000';
@@ -50,8 +78,24 @@ export class MockApi extends Api {
         isLogged: true,
         expiry: 1807843735,
     };
-    public async login(_username: string, _password: string): Promise<LoginData> {
-        return this.mockData;
+    public async login(credential: string, _password: string): Promise<LoginData> {
+        const response = await verifyAndDecodeJWT(credential);
+
+        const newResponse = JSON.parse(JSON.stringify(response));
+
+        let tmpData: LoginData = {
+            username: newResponse.email,
+            jwt: credential,
+            name: newResponse.name,
+            email: newResponse.email,
+            id: newResponse.sub,
+            school: newResponse.hd,
+            profilePicUrl: newResponse.picture,
+            isLogged: true,
+            expiry: newResponse.exp,
+        };
+        console.log('Mock Login response:', tmpData);
+        return tmpData;
     }
     public async signup(name: string, email: string, userName: string, password: string): Promise<LoginData> {
         return this.mockData;

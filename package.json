@@ -14,6 +14,7 @@
         "@types/jest": "^27.5.2",
         "@types/node": "^16.18.80",
         "gapi-script": "^1.2.0",
+        "jose": "^5.2.2",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "react-scripts": "^5.0.1",

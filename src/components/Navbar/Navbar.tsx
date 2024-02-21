@@ -50,18 +50,16 @@ export default function Navbar(props: NavbarProps): JSX.Element {
                 </Typography>
                 {(() => {
                     switch (activePageState.get()) {
-                        case "signup":
-                            return <Button color="inherit" onClick={() => handleClick("login")}  >Login  </Button>;
                         case "login":
-                            return <Button color="inherit" onClick={() => handleClick("signup")}>  SignUp  </Button>;
+                            return <Button color="inherit" onClick={() => handleClick("home")}>  Home  </Button>;
                         default:
                             const items = [
-                                (<Button color="inherit" sx={{ '&': { padding: '0px 20px' } }} onClick={() => handleClick("login")}  >Login  </Button>),
-                                (<Button color="inherit" sx={{ '&': { padding: '0px 20px' } }} onClick={() => handleClick("signup")}>  SignUp  </Button>),
+                                (<Button color="inherit" sx={{ '&': { padding: '0px 20px' } }} onClick={() => handleClick("login")}  >  Login  </Button>),
+                                (<Button color="inherit" sx={{ '&': { padding: '0px 20px' } }} onClick={() => handleClick("about")}>  About Us  </Button>),
                                 (<Box sx={{ flexGrow: 0 }}>
                                     <Tooltip title="Open settings">
                                         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                            <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                                            <Avatar src={loginState.get().profilePicUrl} alt={loginState.get().name} />
                                         </IconButton>
                                     </Tooltip>
                                     <Menu
@@ -104,9 +102,6 @@ export default function Navbar(props: NavbarProps): JSX.Element {
                             return items;
                     }
                 })()}
-
-
-
             </Toolbar>
         </AppBar>
     );

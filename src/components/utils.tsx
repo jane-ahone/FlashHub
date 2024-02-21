@@ -69,7 +69,7 @@ export class LoginState implements LoginData {
     }
 }
 
-export type activePage = "login" | "signup" | "home" | "profile" | "class" | "settings" | "logout" | "flashcard";
+export type activePage = "login" | "home" | "profile" | "class" | "settings" | "logout" | "flashcard" | "about";
 
 export function parseCookies(): LoginData {
     const cookies: any = {};

@@ -13,23 +13,24 @@ interface LoginProps {
 
 
 export default function Login({ api, loginState, activePageState, clientId }: LoginProps) {
-    const username = useCustomState<string>('');
-    const password = useCustomState<string>('');
+    // const username = useCustomState<string>('');
+    // const password = useCustomState<string>('');
 
-    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        api.login(username.get(), password.get()).then((response) => {
-            handleLogin(loginState, activePageState, response);
-            console.log('cookie updated to:', document.cookie);
-        }).catch((error) => {
-            console.error(error);
-        });
-    };
+    // const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    //     event.preventDefault();
+    //     api.login(username.get(), password.get()).then((response) => {
+    //         handleLogin(loginState, activePageState, response);
+    //         console.log('cookie updated to:', document.cookie);
+    //     }).catch((error) => {
+    //         console.error(error);
+    //     });
+    // };
 
     return (
         <div>
-            <form onSubmit={handleSubmit} className="form-container">
-                <h2 className="form-heading">Login</h2>
+            <form className="form-container">
+                {/* <form onSubmit={handleSubmit} className="form-container"> */}
+                {/* <h2 className="form-heading">Login</h2>
                 <div className="form-field">
                     <label htmlFor="username">Username:</label>
                     <input
@@ -53,13 +54,13 @@ export default function Login({ api, loginState, activePageState, clientId }: Lo
 
                 <div className="form-submit">
                     <button type="submit" className="form-button">Login</button>
+                </div> */}
+                <div className="form-field">
+                    <GoogleAuth clientId={clientId.get()} api={api} activePageState={activePageState} loginState={loginState} />
                 </div>
             </form>
 
 
-            <div className="form-field">
-                <GoogleAuth clientId={clientId.get()} />
-            </div>
         </div>
     );
 }
