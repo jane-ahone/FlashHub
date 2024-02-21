@@ -85,6 +85,7 @@ export function updateCookie(data: LoginData) {
     const cookieString = keys.map(key => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`).join('; ') + '; expires=' + new Date(data.expiry * 1000).toUTCString() + '; path=/';
     document.cookie = cookieString;
     console.log('cookieString:', cookieString);
+    console.log("Stored Cookie:", document.cookie);
 }
 
 export function handleLogin(loginState: CustomState<LoginState>, activePage: CustomState<activePage>, response: LoginData) {

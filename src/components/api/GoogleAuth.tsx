@@ -2,7 +2,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google'
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecrypt } from 'jose';
 import React, { useEffect } from 'react'
-import { CustomState, LoginState, activePage } from '../utils';
+import { CustomState, LoginState, activePage, handleLogin } from '../utils';
 import { Api } from './api';
 
 interface GoogleAuthProps {
@@ -19,13 +19,15 @@ const GoogleAuth = ({ clientId, api, activePageState, loginState }: GoogleAuthPr
             <GoogleOAuthProvider clientId={clientId}>
                 <GoogleLogin
                     onSuccess={credentialResponse => {
-                        // jwtDecrypt(credentialResponse.credential)
                         if (credentialResponse.credential) {
                             api.login(credentialResponse.credential, '').then((response) => {
+
+
                                 console.log('Google Login response:', response);
                                 if (response.isLogged) {
-                                    loginState.set(response);
-                                    activePageState.set("flashcard");
+                                    // loginState.set(response);
+                                    // activePageState.set("flashcard");
+                                    handleLogin(loginState, activePageState, response);
                                 }
                             }
                             ).catch((error) => {
