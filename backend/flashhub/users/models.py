@@ -19,10 +19,16 @@ class User(models.Model):
     email = models.EmailField(max_length=100, unique=True)
     phone = models.CharField(max_length=100)
     school = models.ForeignKey(School, on_delete=models.CASCADE)
-    courses = models.ManyToManyField(Course)
     username = models.CharField(max_length=100, unique=True)
     user_type = models.CharField(max_length=100, choices=UserType.choices, default=UserType.STUDENT)
     directory_id = models.CharField(max_length=100, unique=True)
+
+    indexes = [
+        models.Index(fields=['username']),
+        models.Index(fields=['email']),
+        models.Index(fields=['first_name', 'last_name']),
+        models.Index(fields=['school'])
+    ]
 
     def __str__(self):
         return self.first_name + ' ' + self.last_name

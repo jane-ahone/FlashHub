@@ -43,6 +43,11 @@ class File(models.Model):
     parent_directory = models.CharField(max_length=100)
     directory_id = models.CharField(max_length=100, blank=True, null=True)
 
+    indexes = [
+        models.Index(fields=['user', 'parent_directory']),
+        models.Index(fields=['parent_directory']),
+    ]
+
     def __str__(self):
         return self.name
     

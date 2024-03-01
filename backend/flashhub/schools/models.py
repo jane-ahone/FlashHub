@@ -13,6 +13,8 @@ class School(models.Model):
     email_domain = models.CharField(max_length=100)
     logo = models.ImageField(upload_to='logos/', blank=True, null=True)
 
+    indexes = [models.Index(fields=['email_domain'])]
+
     def __str__(self):
         return self.name
     
@@ -23,6 +25,11 @@ class Course(models.Model):
     school = models.ForeignKey(School, on_delete=models.CASCADE)
     course_code = models.CharField(max_length=100)
     directory_id = models.CharField(max_length=100, unique=True)
+
+    indexex = [
+        models.Index(fields=['school', 'course_code']),
+        models.Index(fields=['school', 'name'])
+    ]
 
     def __str__(self):
         return self.name
