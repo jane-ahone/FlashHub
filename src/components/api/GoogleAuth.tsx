@@ -22,11 +22,8 @@ const GoogleAuth = ({ clientId, api, activePageState, loginState }: GoogleAuthPr
                         if (credentialResponse.credential) {
                             api.login(credentialResponse.credential, '').then((response) => {
 
-
                                 console.log('Google Login response:', response);
                                 if (response.isLogged) {
-                                    // loginState.set(response);
-                                    // activePageState.set("flashcard");
                                     handleLogin(loginState, activePageState, response);
                                 }
                             }

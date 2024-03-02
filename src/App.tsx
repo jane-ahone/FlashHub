@@ -18,15 +18,7 @@ function App() {
 
     useEffect(() => {
 
-        const LoginData = parseCookies();
-        if (LoginData.isLogged && LoginData.expiry > Date.now()) {
-            console.log('User is already logged in:', LoginData);
-            loginState.set(LoginData);
-            activePageState.set("flashcard");
-        } else {
-            console.log('User is not logged in:', LoginData);
-
-        }
+        parseCookies(loginState, activePageState);
         api.getCards('flashcard_id').then((response) => {
             console.log(response);
             cards.set(response);
