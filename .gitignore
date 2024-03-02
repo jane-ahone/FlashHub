@@ -30,3 +30,6 @@ google_oauth_client.json
 # local files
 __pycache__/
 migrations/
+
+# db
+db.sqlite3
