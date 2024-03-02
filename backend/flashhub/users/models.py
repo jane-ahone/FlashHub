@@ -22,6 +22,7 @@ class User(models.Model):
     username = models.CharField(max_length=100, unique=True)
     user_type = models.CharField(max_length=100, choices=UserType.choices, default=UserType.STUDENT)
     directory_id = models.CharField(max_length=100, unique=True)
+    profile_url = models.URLField(max_length=100, blank=True, null=True)
 
     indexes = [
         models.Index(fields=['username']),
@@ -39,9 +40,14 @@ class User(models.Model):
 
 class UserToken(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    token = models.CharField(max_length=100)
+    token = models.CharField(max_length=1000)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+
+    indexes = [
+        models.Index(fields=['user', 'token']),
+        models.Index(fields=['user']),
+        models.Index(fields=['token']),
+    ]
 
     def __str__(self):
         return self.user.first_name + ' ' + self.user.last_name
@@ -68,6 +74,7 @@ class Friends(models.Model):
     receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='receiver')
     status = models.CharField(max_length=100, choices=FriendRequestStatus.choices, default=FriendRequestStatus.PENDING)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.requester.first_name + ' ' + self.requester.last_name + ' - ' + self.receiver.first_name + ' ' + self.receiver.last_name

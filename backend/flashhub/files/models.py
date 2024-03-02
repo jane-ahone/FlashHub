@@ -1,7 +1,6 @@
 from django.db import models
 from schools.models import Course
 from users.models import User
-from django.db.models import ForeignKey
 
 class FileOrDirectory(models.TextChoices):
     FILE = 'FILE', 'File'
@@ -31,6 +30,11 @@ class FileType(models.TextChoices):
     OGG = 'OGG', 'OGG'
     OTHER = 'OTHER', 'Other'
 
+class FileVisibility(models.TextChoices):
+    PUBLIC = 'PUBLIC', 'Public'
+    PRIVATE = 'PRIVATE', 'Private'
+    FRIENDS = 'FRIENDS', 'Friends'
+
 # Create your models here.
 class File(models.Model):
     name = models.CharField(max_length=100)
@@ -42,6 +46,7 @@ class File(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     parent_directory = models.CharField(max_length=100)
     directory_id = models.CharField(max_length=100, blank=True, null=True)
+    visibility = models.CharField(max_length=100, choices=FileVisibility.choices, default=FileVisibility.PRIVATE)
 
     indexes = [
         models.Index(fields=['user', 'parent_directory']),

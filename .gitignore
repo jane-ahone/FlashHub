@@ -24,3 +24,9 @@ yarn-error.log*
 
 #environmental variables
 google_oauth_client.json
+.env
+.venv
+
+# local files
+__pycache__
+migrations

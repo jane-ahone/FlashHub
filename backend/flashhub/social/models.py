@@ -3,7 +3,7 @@ from users.models import User
 from files.models import FileType
 
 class MessageStatus(models.TextChoices):
-    SENT = 'SENT', 'Sent'
+    UNREAD = 'UNREAD', 'Unread'
     READ = 'READ', 'Read'
     # FAILED = 'FAILED', 'Failed'
 
@@ -30,7 +30,7 @@ class Attachment(models.Model):
 class PrivateMessage(models.Model):
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sender')
     recipeint = models.ForeignKey(User, on_delete=models.CASCADE, related_name='recipeint')
-    status = models.CharField(max_length=100, choices=MessageStatus.choices, default=MessageStatus.SENT)
+    status = models.CharField(max_length=100, choices=MessageStatus.choices, default=MessageStatus.UNREAD)
     message = models.ForeignKey(Message, on_delete=models.CASCADE)
     reply_to = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True)
 
@@ -46,3 +46,13 @@ class Post(models.Model):
 
     def __str__(self):
         return self.author + " : " + self.message
+    
+class Notification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    message = models.CharField(max_length=1000, blank=False, null=False)
+    status = models.CharField(max_length=100, choices=MessageStatus.choices, default=MessageStatus.UNREAD)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.user + " : " + self.message + " : " + self.status

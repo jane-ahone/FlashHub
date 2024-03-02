@@ -12,6 +12,7 @@ async function verifyAndDecodeJWT(token: string) {
             // Fetch Google's JWKS (JSON Web Key Set)
             const response = await fetch(googleJWKSUri);
             const jwks = await response.json();
+            console.log('JWKS:', jwks)
 
             // Find the correct key in the JWKS by matching the 'kid' (key ID)
             const signingKey = jwks.keys.find((key: { kid: string | undefined; }) => key.kid === header.kid);
