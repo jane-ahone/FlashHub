@@ -28,5 +28,5 @@ google_oauth_client.json
 .venv
 
 # local files
-__pycache__
-migrations
+__pycache__/
+migrations/
