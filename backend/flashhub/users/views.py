@@ -1,16 +1,13 @@
-from django.shortcuts import render
 import jwt
 from rest_framework.decorators import api_view
-from schools.models import Course, School
 from users.models import FriendRequestStatus, Friends, User, UserCourses, UserToken
+from schools.models import Course, School
 from utils import (
     WAIT_DAYS_AFTER_FRIEND_REQUEST,
     get_ecdsa_jwt_public_key,
     get_jwt_keys,
     JWT_ISSUER,
     get_validated_request_user,
-    get_valid_decoded_flashub_jwt,
-    get_request_jwt,
     notify_user,
 )
 from rest_framework.response import Response
@@ -20,6 +17,7 @@ from google.oauth2 import id_token
 from google.auth.transport import requests
 import base64
 from datetime import datetime, timezone
+from ecdsa import VerifyingKey
 
 
 # Create your views here.
@@ -29,11 +27,12 @@ def get_ecdsa_jwks(_request):
     Returns the public key used to verify JWTs\n
     Request is a json object with no keys
     """
-    vk = get_ecdsa_jwt_public_key()
+    vk: VerifyingKey = get_ecdsa_jwt_public_key()
 
-    x_coord, y_coord = vk.pubkey.point.x().to_bytes(
-        32, "big"
-    ), vk.pubkey.point.y().to_bytes(32, "big")
+    x, y = vk.pubkey.point.x(), vk.pubkey.point.y()
+
+    x_coord = base64.urlsafe_b64encode(x.to_bytes(32, "big")).decode("utf-8")
+    y_coord = base64.urlsafe_b64encode(y.to_bytes(32, "big")).decode("utf-8")
 
     jwks = {
         "keys": [
@@ -43,8 +42,8 @@ def get_ecdsa_jwks(_request):
                 "crv": "P-256",
                 "use": "sig",
                 "kid": "1",
-                "x": base64.urlsafe_b64encode(x_coord).decode("utf-8").rstrip("="),
-                "y": base64.urlsafe_b64encode(y_coord).decode("utf-8").rstrip("="),
+                "x": x_coord.rstrip("="),
+                "y": y_coord.rstrip("="),
             }
         ]
     }
@@ -80,7 +79,7 @@ def login(request):  # currently only via google OAuth2
         email_domain = id_info["hd"].lower()
 
         # check if user exists and create if not
-        user = User.objects.get(email=email)
+        user = User.objects.filter(email=email)
         if not user:
             username_prefix = email.split("@")[0] + "#"
             last_user = (
@@ -102,28 +101,32 @@ def login(request):  # currently only via google OAuth2
                 first_name=first_name,
                 last_name=last_name,
                 email=email,
-                email_domain=email_domain,
                 profile_url=picture,
                 username=username,
                 school=school,
             )
 
             user.save()
+        else:
+            user = user[0]
 
         # create token
         now = datetime.now(tz=timezone.utc).timestamp()
+
+        resp_obj = {
+            "user_id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "user_type": user.user_type,
+            "exp": now + 2 * 60,
+            "iat": now,
+            "iss": JWT_ISSUER,
+            "aud": JWT_ISSUER,
+        }
+
         sk, _ = get_jwt_keys()
         token = jwt.encode(
-            {
-                "user_id": user.id,
-                "username": user.username,
-                "email": user.email,
-                "user_type": user.user_type,
-                "exp": now + 2 * 60,
-                "iat": now,
-                "iss": JWT_ISSUER,
-                "aud": JWT_ISSUER,
-            },
+            resp_obj,
             sk,
             algorithm="ES256",
         )
@@ -133,10 +136,10 @@ def login(request):  # currently only via google OAuth2
         if len(user_tokens) >= 3:
             user_tokens[-1].delete()
 
-        user_token = UserToken(user=user, token=token.decode("utf-8"))
+        user_token = UserToken(user=user, token=token)
         user_token.save()
 
-        return Response({"token": token.decode("utf-8")})
+        return Response({"token": token})
     except ValueError as e:
         return Response({"error": str(e)}, status=400)
 
@@ -149,17 +152,16 @@ def logout(request):
     request is a json object with the following keys: \n
     `jwt` : `str` -> jwt token issued by flashhub
     """
+
     request_jwt = request.data.get("jwt")
     if not request_jwt:
         return Response({"error": "No JWT provided"}, status=400)
 
-    user_token = UserToken.objects.get(token=request_jwt)
-    if user_token:
-        user_token.delete()
+    UserToken.objects.get(token=request_jwt).delete()
     return Response({"message": "Logged out successfully"})
 
 
-@api_view(["GET"])
+@api_view(["POST"])
 def get_user(request):
     """
     Returns the user's details\n

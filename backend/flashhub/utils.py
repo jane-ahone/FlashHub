@@ -1,17 +1,18 @@
 from dotenv import load_dotenv
 import os
 import hashlib
-from ecdsa import SigningKey, SECP256k1
+from ecdsa import SigningKey, SECP256k1, VerifyingKey
 from rest_framework.exceptions import ValidationError
 import jwt
 from social.models import Notification
 from users.models import User, UserToken
 
-#constants
+# constants
 JWT_ISSUER = "flashhub"
 WAIT_DAYS_AFTER_FRIEND_REQUEST = 30
 
-#helper functions
+
+# helper functions
 def get_jwt_keys():
     load_dotenv()
     passphrase = os.environ.get("KEY_PASSPHRASE")
@@ -27,12 +28,20 @@ def get_jwt_keys():
 
 def get_ecdsa_jwt_public_key():
     _, vk = get_jwt_keys()
-    return vk
+    return VerifyingKey.from_pem(vk)
+
 
 def get_valid_decoded_flashub_jwt(jwt_token):
-    vk = get_ecdsa_jwt_public_key()
+    vk = get_ecdsa_jwt_public_key().to_pem().decode("utf-8")
     try:
-        return jwt.decode(jwt_token, vk, algorithms=["ES256"], verify=True, audience=JWT_ISSUER, issuer=JWT_ISSUER)
+        return jwt.decode(
+            jwt_token,
+            vk,
+            algorithms=["ES256"],
+            verify=True,
+            audience=JWT_ISSUER,
+            issuer=JWT_ISSUER,
+        )
     except jwt.exceptions.ExpiredSignatureError:
         raise ValidationError("JWT has expired")
     except jwt.exceptions.InvalidSignatureError:
@@ -43,15 +52,17 @@ def get_valid_decoded_flashub_jwt(jwt_token):
         raise ValidationError("Invalid JWT audience")
     except jwt.exceptions.InvalidTokenError:
         raise ValidationError("Invalid JWT")
-    
+
+
 def get_request_jwt(request):
-    request_jwt = request.headers.get('jwt')
+    request_jwt = request.data.get("jwt")
     if not request_jwt:
         raise ValidationError("No JWT provided")
-    
+
     if not UserToken.objects.get(token=request_jwt):
         raise ValidationError("Invalid JWT")
     return request_jwt
+
 
 def get_validated_request_user(request):
     request_jwt = get_request_jwt(request)
@@ -61,6 +72,7 @@ def get_validated_request_user(request):
     if not user:
         raise ValidationError("Invalid user")
     return user
+
 
 def notify_user(user, message):
     nofitication = Notification(user=user, message=message)
