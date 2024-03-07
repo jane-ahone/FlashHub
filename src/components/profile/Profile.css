@@ -1,0 +1,13 @@
+.profileMainRest{
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.profileMainRest>*{
+    margin-bottom: 1rem;
+}
+.menuMain{
+    margin-top: 1rem;
+}

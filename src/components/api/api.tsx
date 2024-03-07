@@ -1,35 +1,10 @@
 import { LoginData } from "../utils";
 import { Card } from "../FlashCard/utils";
-import { jwtVerify, importJWK } from 'jose';
+import { verifyAndDecodeJWT } from "../utils";
 
 
 
-const googleJWKSUri = 'https://www.googleapis.com/oauth2/v3/certs';
-
-async function verifyAndDecodeJWT(token: string) {
-    try {
-        const { payload, protectedHeader } = await jwtVerify(token, async (header) => {
-            // Fetch Google's JWKS (JSON Web Key Set)
-            const response = await fetch(googleJWKSUri);
-            const jwks = await response.json();
-            console.log('JWKS:', jwks)
-
-            // Find the correct key in the JWKS by matching the 'kid' (key ID)
-            const signingKey = jwks.keys.find((key: { kid: string | undefined; }) => key.kid === header.kid);
-            if (!signingKey) {
-                throw new Error('Signing key not found in JWKS');
-            }
-
-            // Construct and return the appropriate public key to verify the JWT
-            return await importJWK(signingKey, header.alg);
-        }, {
-            issuer: 'https://accounts.google.com',
-        });
-        return payload;
-    } catch (error) {
-        console.error('Failed to verify JWT:', error);
-    }
-}
+export const googleJWKSUri = 'https://www.googleapis.com/oauth2/v3/certs';
 
 export class Api {
     private baseUrl = 'http://localhost:3000';
@@ -82,18 +57,17 @@ export class MockApi extends Api {
     public async login(credential: string, _password: string): Promise<LoginData> {
         const response = await verifyAndDecodeJWT(credential);
 
-        const newResponse = JSON.parse(JSON.stringify(response));
 
         let tmpData: LoginData = {
-            username: newResponse.email,
+            username: response.email,
             jwt: credential,
-            name: newResponse.name,
-            email: newResponse.email,
-            id: newResponse.sub,
-            school: newResponse.hd,
-            profilePicUrl: newResponse.picture,
+            name: response.name,
+            email: response.email,
+            id: response.sub,
+            school: response.hd,
+            profilePicUrl: response.picture,
             isLogged: true,
-            expiry: newResponse.exp,
+            expiry: response.exp * 1000,
         };
         console.log('Mock Login response:', tmpData);
         return tmpData;

@@ -7,7 +7,7 @@ interface SignupProps {
     activePageState: CustomState<activePage>;
 }
 
-export default function Signup(props: SignupProps): JSX.Element {
+export default function Signup({api,loginState,activePageState}: SignupProps): JSX.Element {
     const name = useCustomState<string>('');
     const email = useCustomState<string>('');
     const password = useCustomState<string>('');
@@ -17,8 +17,8 @@ export default function Signup(props: SignupProps): JSX.Element {
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         console.log('Signing up with:', name.get(), email.get(), userName.get(), password.get(), confirmPassword.get());
-        props.api.signup(name.get(), email.get(), userName.get(), password.get()).then((response) => {
-            handleLogin(props.loginState, props.activePageState, response);
+        api.signup(name.get(), email.get(), userName.get(), password.get()).then((response) => {
+            handleLogin(loginState, activePageState, response);
             console.log('cookie updated to:', document.cookie);
         }).catch((error) => {
             console.error(error);

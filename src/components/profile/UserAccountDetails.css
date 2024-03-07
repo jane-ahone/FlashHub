@@ -1,0 +1,16 @@
+.userAccountDetailsTitle,.userAccountDetailsNum{
+    color: #174453;
+    font-weight: 500;
+    font-size: 0.6rem;
+    text-align: center;
+    margin: 0.5rem;
+}
+
+.userAccountDetailsTitle{
+    color: rgba(23, 68, 83, 1);
+    opacity: 0.5;
+}
+
+.userAccountDetailsNum{
+    color: rgba(23, 69, 83, 1);
+}
