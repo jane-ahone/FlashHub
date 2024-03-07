@@ -1,5 +1,7 @@
 import jwt
 from rest_framework.decorators import api_view
+from rest_framework.request import Request
+from rest_framework.response import Response
 from users.models import FriendRequestStatus, Friends, User, UserCourses, UserToken
 from schools.models import Course, School
 from utils import (
@@ -22,7 +24,7 @@ from ecdsa import VerifyingKey
 
 # Create your views here.
 @api_view(["GET"])
-def get_ecdsa_jwks(_request):
+def get_ecdsa_jwks(_request: Request) -> Response:
     """
     Returns the public key used to verify JWTs\n
     Request is a json object with no keys
@@ -52,7 +54,7 @@ def get_ecdsa_jwks(_request):
 
 
 @api_view(["POST"])
-def login(request):  # currently only via google OAuth2
+def login(request: Request) -> Response:  # currently only via google OAuth2
     """
     Returns a JWT token used to authenticate requests\n
     request is a json object with the following keys: \n
@@ -145,7 +147,7 @@ def login(request):  # currently only via google OAuth2
 
 
 @api_view(["POST"])
-def logout(request):
+def logout(request: Request) -> Response:
     """
     Logs out the user by deleting the jwt token.\n
     Client should delete the token from local storage or cookies too\n
@@ -162,7 +164,7 @@ def logout(request):
 
 
 @api_view(["POST"])
-def get_user(request):
+def get_user(request: Request) -> Response:
     """
     Returns the user's details\n
     request is a json object with the following keys: \n
@@ -210,7 +212,7 @@ def get_user(request):
 
 
 @api_view(["POST"])
-def add_courses(request):
+def add_courses(request: Request) -> Response:
     """
     Adds courses to the user's list of courses\n
     request is a json object with the following keys: \n
@@ -244,7 +246,7 @@ def add_courses(request):
 
 
 @api_view(["POST"])
-def remove_courses(request):
+def remove_courses(request: Request) -> Response:
     """
     Removes courses from the user's list of courses\n
     request is a json object with the following: \n
@@ -273,7 +275,7 @@ def remove_courses(request):
 
 
 @api_view(["GET"])
-def get_courses(request):
+def get_courses(request: Request) -> Response:
     """
     Returns the list of courses the user is enrolled in\n
     request is a json object with the following keys: \n
@@ -299,7 +301,7 @@ def get_courses(request):
 
 
 @api_view(["GET"])
-def get_friends(request):
+def get_friends(request: Request) -> Response:
     """
     Returns the list of friends the user has\n
     request is a json object with the following keys: \n
@@ -334,7 +336,7 @@ def get_friends(request):
 
 
 @api_view(["POST"])
-def send_friend_request(request):
+def send_friend_request(request: Request) -> Response:
     """
     Sends a friend request to another user\n
     request is a json object with the following keys:\n
@@ -413,7 +415,7 @@ def send_friend_request(request):
 
 
 @api_view(["GET"])
-def get_pending_friend_requests(request):
+def get_pending_friend_requests(request: Request) -> Response:
     """
     Returns the list of pending friend requests, either `sent` or `received` \n
     request is a json object with the following keys: \n
@@ -454,7 +456,7 @@ def get_pending_friend_requests(request):
 
 
 @api_view(["POST"])
-def respond_to_friend_request(request):
+def respond_to_friend_request(request: Request) -> Response:
     """
     Responds to a friend request \n
     request is a json object with the following keys: \n

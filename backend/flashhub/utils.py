@@ -4,8 +4,9 @@ import hashlib
 from ecdsa import SigningKey, SECP256k1, VerifyingKey
 from rest_framework.exceptions import ValidationError
 import jwt
-from social.models import Notification
+from social.models import Notification, Message
 from users.models import User, UserToken
+from rest_framework.request import Request
 
 # constants
 JWT_ISSUER = "flashhub"
@@ -13,7 +14,7 @@ WAIT_DAYS_AFTER_FRIEND_REQUEST = 30
 
 
 # helper functions
-def get_jwt_keys():
+def get_jwt_keys() -> tuple[str, str]:
     load_dotenv()
     passphrase = os.environ.get("KEY_PASSPHRASE")
     if not passphrase:
@@ -26,12 +27,12 @@ def get_jwt_keys():
     return sk.to_pem().decode("utf-8"), vk.to_pem().decode("utf-8")
 
 
-def get_ecdsa_jwt_public_key():
+def get_ecdsa_jwt_public_key() -> VerifyingKey:
     _, vk = get_jwt_keys()
     return VerifyingKey.from_pem(vk)
 
 
-def get_valid_decoded_flashub_jwt(jwt_token):
+def get_valid_decoded_flashub_jwt(jwt_token: str) -> dict:
     vk = get_ecdsa_jwt_public_key().to_pem().decode("utf-8")
     try:
         return jwt.decode(
@@ -54,7 +55,7 @@ def get_valid_decoded_flashub_jwt(jwt_token):
         raise ValidationError("Invalid JWT")
 
 
-def get_request_jwt(request):
+def get_request_jwt(request: Request) -> str:
     request_jwt = request.data.get("jwt")
     if not request_jwt:
         raise ValidationError("No JWT provided")
@@ -64,7 +65,7 @@ def get_request_jwt(request):
     return request_jwt
 
 
-def get_validated_request_user(request):
+def get_validated_request_user(request: Request) -> User:
     request_jwt = get_request_jwt(request)
     decoded_jwt = get_valid_decoded_flashub_jwt(request_jwt)
     user_id = decoded_jwt.get("user_id")
@@ -74,7 +75,7 @@ def get_validated_request_user(request):
     return user
 
 
-def notify_user(user, message):
+def notify_user(user: User, message: Message) -> Notification:
     nofitication = Notification(user=user, message=message)
     nofitication.save()
     return nofitication
