@@ -1,0 +1,22 @@
+.followBtn{
+    background-color: rgba(239, 171, 0, 1);
+    padding: 0.35rem 0.4rem;
+    font-weight: bold;
+    font-size: 0.7rem;
+    border: none;
+    width: max-content;
+
+}
+.followBtn:hover{
+    background-color: rgb(217, 156, 2)
+}
+.followBtn:active{
+    background-color: rgb(150, 111, 11);
+}
+.followBtn, .followBtn i{
+    color: white;
+}
+
+.followBtn i{
+    margin-right:0.7rem
+}

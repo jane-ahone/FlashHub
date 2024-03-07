@@ -8,6 +8,7 @@ import FlashCard from './components/FlashCard/FlashCard';
 import { Card } from './components/FlashCard/utils';
 import { useEffect } from 'react';
 import google_oauth_client from './components/api/google_oauth_client.json';
+import Profile from './components/profile/Profile';
 function App() {
 
     const api = new MockApi();
@@ -31,7 +32,6 @@ function App() {
         clientId.set(google_oauth_client.web.client_id);
 
     }, []);
-
     return (
         <>
             <Navbar loginState={loginState} activePageState={activePageState} />
@@ -39,6 +39,8 @@ function App() {
                 switch (activePageState.get()) {
                     case "flashcard":
                         return <FlashCard cards={cards} />;
+                    case "profile":
+                        return <Profile avatarName={loginState.get().name[0]} usersname={loginState.get().name} />
                     default:
                         return <Login api={api} loginState={loginState} activePageState={activePageState} clientId={clientId} />;
                 }
