@@ -8,6 +8,7 @@ import FlashCard from './components/FlashCard/FlashCard';
 import { Card } from './components/FlashCard/utils';
 import { useEffect } from 'react';
 import google_oauth_client from './components/api/google_oauth_client.json';
+import Profile from './components/profile/Profile';
 function App() {
 
     const api = new MockApi();
@@ -18,15 +19,7 @@ function App() {
 
     useEffect(() => {
 
-        const LoginData = parseCookies();
-        if (LoginData.isLogged && LoginData.expiry > Date.now()) {
-            console.log('User is already logged in:', LoginData);
-            loginState.set(LoginData);
-            activePageState.set("flashcard");
-        } else {
-            console.log('User is not logged in:', LoginData);
-
-        }
+        parseCookies(loginState, activePageState);
         api.getCards('flashcard_id').then((response) => {
             console.log(response);
             cards.set(response);
@@ -39,16 +32,15 @@ function App() {
         clientId.set(google_oauth_client.web.client_id);
 
     }, []);
-
     return (
         <>
             <Navbar loginState={loginState} activePageState={activePageState} />
             {(() => {
                 switch (activePageState.get()) {
-                    case "signup":
-                        return <Signup api={api} loginState={loginState} activePageState={activePageState} />;
                     case "flashcard":
                         return <FlashCard cards={cards} />;
+                    case "profile":
+                        return <Profile avatarName={loginState.get().name[0]} usersname={loginState.get().name} />
                     default:
                         return <Login api={api} loginState={loginState} activePageState={activePageState} clientId={clientId} />;
                 }

@@ -9,6 +9,7 @@ import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import "./Navbar.css"
 import { activePage, LoginState, CustomState } from '../utils';
 
 interface NavbarProps {
@@ -43,72 +44,78 @@ export default function Navbar(props: NavbarProps): JSX.Element {
         setAnchorElUser(null);
     };
     return (
-        <AppBar position="static" sx={{ backgroundColor: '#212227', boxShadow: 'none' }}>
-            <Toolbar>
-                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                    FlashHub
-                </Typography>
-                {(() => {
-                    switch (activePageState.get()) {
-                        case "signup":
-                            return <Button color="inherit" onClick={() => handleClick("login")}  >Login  </Button>;
-                        case "login":
-                            return <Button color="inherit" onClick={() => handleClick("signup")}>  SignUp  </Button>;
-                        default:
-                            const items = [
-                                (<Button color="inherit" sx={{ '&': { padding: '0px 20px' } }} onClick={() => handleClick("login")}  >Login  </Button>),
-                                (<Button color="inherit" sx={{ '&': { padding: '0px 20px' } }} onClick={() => handleClick("signup")}>  SignUp  </Button>),
-                                (<Box sx={{ flexGrow: 0 }}>
-                                    <Tooltip title="Open settings">
-                                        <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                            <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-                                        </IconButton>
-                                    </Tooltip>
-                                    <Menu
-                                        sx={{
-                                            mt: '45px',
-                                            '& .MuiPaper-root': {
-                                                backgroundColor: '#212227',
-                                                color: 'white',
-                                            },
-                                        }}
-                                        id="menu-appbar"
-                                        anchorEl={anchorElUser}
-                                        anchorOrigin={{
-                                            vertical: 'top',
-                                            horizontal: 'left',
-                                        }}
-                                        keepMounted
-                                        transformOrigin={{
-                                            vertical: 'top',
-                                            horizontal: 'left',
-                                        }}
-                                        open={Boolean(anchorElUser)}
-                                        onClose={handleCloseUserMenu}
-                                    >
-                                        {settings.map((setting) => (
-                                            <MenuItem key={setting} onClick={handleCloseUserMenu} sx={{
-                                                '&:hover': {
-                                                    backgroundColor: '#3f3f3f',
-                                                },
-                                                '&': {
-                                                    padding: '15px 40px',
-                                                },
-                                            }}>
-                                                <Typography textAlign="center">{setting}</Typography>
-                                            </MenuItem>
-                                        ))}
-                                    </Menu>
-                                </Box>),
-                            ]
-                            return items;
-                    }
-                })()}
+        // <AppBar position="static" sx={{ backgroundColor: 'rgba(23, 69, 83, 0.8)', boxShadow: 'none', height: '7%' }}>
 
+        <div className="navbarHeader">
+            {/* Add an if statement */}
+            <span className='appName' onClick={() => {
+                if (loginState.get().isLogged) {
+                    handleClick("home")
+                }
 
-
-            </Toolbar>
-        </AppBar>
+            }}>FLASH HUB</span>
+            <div className="navbarToolBar">
+                <Toolbar sx={{ '&': { justifyContent: 'flex-end' } }}>
+                    {(() => {
+                        switch (activePageState.get()) {
+                            case "login":
+                                return <Button color="inherit" onClick={() => handleClick("home")}>  Home  </Button>;
+                            default:
+                                const items = [
+                                    (<Button color="inherit" sx={{ color: 'white', '&': { padding: '0px 20px' } }} onClick={() => handleClick("login")}  >  Login  </Button>),
+                                    (<Button color="inherit" sx={{ color: 'white', '&': { padding: '0px 20px' } }} onClick={() => handleClick("about")}>  About Us  </Button>),
+                                    (<Box sx={{ flexGrow: 0 }}>
+                                        <Tooltip title="Open settings">
+                                            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                                                <Avatar src={loginState.get().profilePicUrl} alt={loginState.get().name} />
+                                            </IconButton>
+                                        </Tooltip>
+                                        <Menu
+                                            sx={{
+                                                mt: '45px',
+                                                // '& .MuiPaper-root': {
+                                                //     backgroundColor: '#212227',
+                                                //     color: 'white',
+                                                // },
+                                            }}
+                                            id="menu-appbar"
+                                            anchorEl={anchorElUser}
+                                            anchorOrigin={{
+                                                vertical: 'top',
+                                                horizontal: 'left',
+                                            }}
+                                            keepMounted
+                                            transformOrigin={{
+                                                vertical: 'top',
+                                                horizontal: 'left',
+                                            }}
+                                            open={Boolean(anchorElUser)}
+                                            onClose={handleCloseUserMenu}
+                                        >
+                                            {/* Attempting to add code here */}
+                                            {settings.map((setting) => (
+                                                <MenuItem key={setting} onClick={handleClick.bind(null, "profile")}
+                                                    sx={{
+                                                        '&:hover': {
+                                                            backgroundColor: '#3f3f3f',
+                                                        },
+                                                        '&': {
+                                                            padding: '15px 40px',
+                                                        },
+                                                    }}>
+                                                    <Typography textAlign="center">{setting}</Typography>
+                                                </MenuItem>
+                                            ))}
+                                        </Menu>
+                                    </Box>),
+                                ]
+                                return items;
+                        }
+                    })()}
+                </Toolbar>
+            </div>
+        </div>
+        // </AppBar>
     );
 }
 

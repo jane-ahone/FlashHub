@@ -4,6 +4,7 @@
 /node_modules
 /.pnp
 .pnp.js
+package-lock.json
 
 # testing
 /coverage
@@ -24,3 +25,12 @@ yarn-error.log*
 
 #environmental variables
 google_oauth_client.json
+.env
+.venv
+
+# local files
+__pycache__/
+migrations/
+
+# db
+db.sqlite3

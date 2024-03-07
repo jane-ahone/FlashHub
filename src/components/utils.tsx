@@ -1,4 +1,6 @@
+import { jwtVerify, importJWK } from "jose";
 import { useState } from "react";
+import { googleJWKSUri } from "./api/api";
 
 export interface CustomState<T> {
     get: () => T;
@@ -69,27 +71,71 @@ export class LoginState implements LoginData {
     }
 }
 
-export type activePage = "login" | "signup" | "home" | "profile" | "class" | "settings" | "logout" | "flashcard";
+export type activePage = "login" | "home" | "profile" | "class" | "settings" | "logout" | "flashcard" | "about";
 
-export function parseCookies(): LoginData {
-    const cookies: any = {};
+export function parseCookies(loginState: CustomState<LoginState>, activePageState: CustomState<activePage>) {
     document.cookie.split(';').forEach(function (cookie) {
         const [name, value] = cookie.split('=').map(c => c.trim());
-        if (name !== 'path' && name !== 'expires') { cookies[name] = decodeURIComponent(value); }
+        if (name === "jwt") {
+            verifyAndDecodeJWT(value).then((response) => {
+
+                let tmpData: LoginData = {
+                    username: response.email,
+                    jwt: value,
+                    name: response.name,
+                    email: response.email,
+                    id: response.sub,
+                    school: response.hd,
+                    profilePicUrl: response.picture,
+                    isLogged: true,
+                    expiry: response.exp * 1000,
+                };
+                if (tmpData.isLogged && tmpData.expiry > Date.now()) {
+                    console.log('User is already logged in:', tmpData);
+                    loginState.set(tmpData);
+                    activePageState.set("flashcard");
+                } else {
+                    console.log('User is not logged in:', tmpData);
+
+                }
+
+            }
+            );
+
+        }
+
     });
-    return cookies as LoginData;
 }
 
 export function updateCookie(data: LoginData) {
-    const keys = Object.keys(data) as Array<keyof LoginData>; // Type assertion
-    const cookieString = keys.map(key => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`).join('; ') + '; expires=' + new Date(data.expiry * 1000).toUTCString() + '; path=/';
-    document.cookie = cookieString;
-    console.log('cookieString:', cookieString);
+    document.cookie = "jwt=" + data.jwt + "; expires=" + new Date(data.expiry).toUTCString();
 }
 
 export function handleLogin(loginState: CustomState<LoginState>, activePage: CustomState<activePage>, response: LoginData) {
     loginState.set(response);
     activePage.set("flashcard");
     updateCookie(response);
-    console.log('Signup successful:', response);
+}
+export async function verifyAndDecodeJWT(token: string) {
+    try {
+        const { payload, protectedHeader } = await jwtVerify(token, async (header) => {
+            // Fetch Google's JWKS (JSON Web Key Set)
+            const response = await fetch(googleJWKSUri);
+            const jwks = await response.json();
+
+            // Find the correct key in the JWKS by matching the 'kid' (key ID)
+            const signingKey = jwks.keys.find((key: { kid: string | undefined; }) => key.kid === header.kid);
+            if (!signingKey) {
+                throw new Error('Signing key not found in JWKS');
+            }
+
+            // Construct and return the appropriate public key to verify the JWT
+            return await importJWK(signingKey, header.alg);
+        }, {
+            issuer: 'https://accounts.google.com',
+        });
+        return JSON.parse(JSON.stringify(payload));
+    } catch (error) {
+        console.error('Failed to verify JWT:', error);
+    }
 }

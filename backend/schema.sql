@@ -62,6 +62,7 @@ CREATE TABLE IF NOT EXISTS 'files' (
     'type' ENUM('file', 'directory') NOT NULL DEFAULT 'file',
     'data_url' VARCHAR(255),
     'last_modified' TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    'file_type' ENUM('pdf', 'flashcard', 'docx', 'pptx', 'xlsx', 'video', 'audio', 'image', 'other') NOT NULL DEFAULT 'other',
     'created_at' TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     'user_id' INT NOT NULL,
     FOREIGN KEY ('user_id') REFERENCES 'users'('id')
@@ -128,7 +129,6 @@ CREATE TABLE IF NOT EXISTS 'private_messages' (
     FOREIGN KEY ('message_id') REFERENCES 'messages'('id'),
     FOREIGN KEY ('reply_to') REFERENCES 'private_messages'('id')
 );
-
 
 DELIMITER $$
 CREATE TRIGGER `private_messages_BEFORE_INSERT` BEFORE INSERT ON `private_messages` FOR EACH ROW

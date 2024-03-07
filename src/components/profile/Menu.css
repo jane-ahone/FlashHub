@@ -1,0 +1,33 @@
+.menuMain{
+    border-bottom: 0.89px solid rgba(0, 0, 0, 0.2);
+    min-width: 95%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.menuMain button:hover:active{
+    background-color: rgba(23, 68, 83, 1);
+    color: white;
+    opacity: 1;
+    
+
+}
+.menuMain button,.menuCreatedBtn{
+    font-weight: bold;
+    font-size: 0.8rem;
+    background-color: white;
+    opacity: 0.2;
+    padding: 0.4rem 1.3rem;
+    border-radius: 5px 5px 0 0px;
+    border-width: 0.89px 0.89px 0px 0.89px;
+    min-width: 15%;
+}
+.menuCreatedBtn{
+    border-radius: 4px;
+    border-width: 0.89px;
+    padding: 0.3rem 0.1rem;
+    align-self: start;
+    margin-left: 2.5%;
+    min-width: 13%;
+    
+}

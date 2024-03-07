@@ -1,6 +1,10 @@
 import { LoginData } from "../utils";
 import { Card } from "../FlashCard/utils";
+import { verifyAndDecodeJWT } from "../utils";
 
+
+
+export const googleJWKSUri = 'https://www.googleapis.com/oauth2/v3/certs';
 
 export class Api {
     private baseUrl = 'http://localhost:3000';
@@ -50,8 +54,23 @@ export class MockApi extends Api {
         isLogged: true,
         expiry: 1807843735,
     };
-    public async login(_username: string, _password: string): Promise<LoginData> {
-        return this.mockData;
+    public async login(credential: string, _password: string): Promise<LoginData> {
+        const response = await verifyAndDecodeJWT(credential);
+
+
+        let tmpData: LoginData = {
+            username: response.email,
+            jwt: credential,
+            name: response.name,
+            email: response.email,
+            id: response.sub,
+            school: response.hd,
+            profilePicUrl: response.picture,
+            isLogged: true,
+            expiry: response.exp * 1000,
+        };
+        console.log('Mock Login response:', tmpData);
+        return tmpData;
     }
     public async signup(name: string, email: string, userName: string, password: string): Promise<LoginData> {
         return this.mockData;
