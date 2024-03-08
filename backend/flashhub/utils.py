@@ -7,6 +7,7 @@ import jwt
 from social.models import Notification, Message
 from users.models import User, UserToken
 from rest_framework.request import Request
+from typing import Tuple
 
 # constants
 JWT_ISSUER = "flashhub"
@@ -14,7 +15,7 @@ WAIT_DAYS_AFTER_FRIEND_REQUEST = 30
 
 
 # helper functions
-def get_jwt_keys() -> tuple[str, str]:
+def get_jwt_keys() -> Tuple[str, str]:
     load_dotenv()
     passphrase = os.environ.get("KEY_PASSPHRASE")
     if not passphrase:
