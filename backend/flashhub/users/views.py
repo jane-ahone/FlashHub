@@ -65,7 +65,7 @@ def login(request: Request) -> Response:  # currently only via google OAuth2
 
     request_jwt = request.data.get("jwt")
     if not request_jwt:
-        return Response({"error": "No JWT provided"}, status=400)
+        return Response({"error": "No JWT found in provided"}, status=400)
 
     try:
         id_info = id_token.verify_oauth2_token(
@@ -73,7 +73,7 @@ def login(request: Request) -> Response:  # currently only via google OAuth2
         )
         if id_info["iss"] not in ["accounts.google.com", "https://accounts.google.com"]:
             raise ValueError("Wrong issuer")
-        user_id = id_info["sub"]
+        _google_user_id = id_info["sub"]
         email = id_info["email"].lower()
         first_name = id_info["given_name"].capitalize()
         last_name = id_info["family_name"].capitalize()
@@ -111,7 +111,6 @@ def login(request: Request) -> Response:  # currently only via google OAuth2
             user.save()
         else:
             user = user[0]
-
         # create token
         now = datetime.now(tz=timezone.utc).timestamp()
 
@@ -136,13 +135,14 @@ def login(request: Request) -> Response:  # currently only via google OAuth2
         # save tokens upto a maximum of 3 tokens, delete the oldest if more than 3
         user_tokens = UserToken.objects.filter(user=user).order_by("-created_at")
         if len(user_tokens) >= 3:
-            user_tokens[-1].delete()
+            user_tokens.last().delete()
 
         user_token = UserToken(user=user, token=token)
         user_token.save()
 
-        return Response({"token": token})
+        return Response({"token": token, "exp": resp_obj["exp"]})
     except ValueError as e:
+        print("Error: ", e)
         return Response({"error": str(e)}, status=400)
 
 

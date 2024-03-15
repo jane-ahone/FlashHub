@@ -1,13 +1,13 @@
 import { FormEvent } from 'react';
-import { useCustomState, LoginState, CustomState, activePage, handleLogin } from '../utils';
+import { useCustomState, LoginData, CustomState, activePage, handleLogin } from '../utils';
 import { Api } from '../api/api';
 interface SignupProps {
     api: Api;
-    loginState: CustomState<LoginState>;
+    loginState: CustomState<LoginData>;
     activePageState: CustomState<activePage>;
 }
 
-export default function Signup({api,loginState,activePageState}: SignupProps): JSX.Element {
+export default function Signup({ api, loginState, activePageState }: SignupProps): JSX.Element {
     const name = useCustomState<string>('');
     const email = useCustomState<string>('');
     const password = useCustomState<string>('');

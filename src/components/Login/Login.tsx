@@ -1,12 +1,12 @@
 import { Api } from '../api/api';
-import { CustomState, LoginState, activePage, useCustomState, handleLogin } from '../utils';
+import { CustomState, LoginData, activePage, useCustomState, handleLogin } from '../utils';
 import './forms.css';
 import React, { useState, FormEvent } from 'react';
 import GoogleAuth from '../api/GoogleAuth';
 
 interface LoginProps {
     api: Api;
-    loginState: CustomState<LoginState>;
+    loginState: CustomState<LoginData>;
     activePageState: CustomState<activePage>;
     clientId: CustomState<string>;
 }

@@ -4,7 +4,7 @@ import Avatar from "./Avatar"
 import UserInfo from "./UserInfo"
 import Menu from "./Menu"
 import "./Profile.css"
-import { activePage, LoginState, CustomState } from '../utils';
+import { activePage, LoginData, CustomState } from '../utils';
 
 
 interface ProfileProps {
