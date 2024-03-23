@@ -1,15 +1,16 @@
 import React from 'react'
-import Header from "./Header"
 import Avatar from "./Avatar"
-import UserInfo from "./UserInfo"
+import UserAccount from "./UserAccount"
 import Menu from "./Menu"
 import "./Profile.css"
-import { activePage, LoginData, CustomState } from '../utils';
+import { activePage, LoginData, CustomState, LoginState } from '../utils';
+
 
 
 interface ProfileProps {
     avatarName: string,
     usersname: string
+    loginState: CustomState<LoginData>
 }
 
 
@@ -18,7 +19,7 @@ const Profile = (props: ProfileProps) => {
     return (
         <div>
             <div className="profileMainRest">
-                <UserInfo avatarName={props.avatarName} bgColour={{ "background-color": "rgba(17, 33, 39, 1)" }} usersname={props.usersname} />
+                <UserAccount loginState={props.loginState} usersname={props.usersname} />
                 <Menu />
             </div>
 

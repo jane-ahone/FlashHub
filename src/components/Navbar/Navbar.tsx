@@ -94,7 +94,12 @@ export default function Navbar(props: NavbarProps): JSX.Element {
                                         >
                                             {/* Attempting to add code here */}
                                             {settings.map((setting) => (
-                                                <MenuItem key={setting} onClick={handleClick.bind(null, "profile")}
+                                                <MenuItem key={setting} onClick={
+                                                    () => {
+                                                        handleClick("profile")
+                                                        handleCloseUserMenu()
+                                                    }
+                                                }
                                                     sx={{
                                                         '&:hover': {
                                                             backgroundColor: '#3f3f3f',

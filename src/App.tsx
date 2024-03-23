@@ -43,7 +43,7 @@ function App() {
                     case "flashcard":
                         return <FlashCard cards={cards} />;
                     case "profile":
-                        return <Profile avatarName={loginState.get().first_name} usersname={loginState.get().username} />
+                        return <Profile avatarName={loginState.get().first_name} usersname={loginState.get().username} loginState={loginState} />
                     default:
                         return <Login api={api} loginState={loginState} activePageState={activePageState} clientId={clientId} />;
                 }

@@ -1,0 +1,10 @@
+.userActivityMenuCreate{
+    border-radius: 2px; 
+    border: none;   
+    padding: 0.5rem 0.3rem;
+    min-width: 13%;
+    font-weight: bold;
+    font-size: 1rem;
+    background-color: #EBA000;
+    color: white;
+}

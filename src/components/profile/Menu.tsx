@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import "./Menu.css"
-import Questions from "./Questions-amico (1).png";
 import { CustomState, useCustomState } from '../utils';
+import SelectAutoWidth from './SelectBtn';
+import UserInfo from './UserInfo';
 
 interface MenuOption {
     state: CustomState<Boolean>,
@@ -42,21 +43,11 @@ const Menu = () => {
     return (
         <>
             <div className="menuMain">
-
                 {btnClicked.map((menuOption) =>
-                    <button onClick={() => { handleClick(menuOption) }} style={menuOption.state.get() ? btnActiveStyling : {}} > {menuOption.text} </button>
+                    <button onClick={() => { handleClick(menuOption) }} style={menuOption.state.get() ? btnActiveStyling : {}} className={menuOption.text + 'btn'}> {menuOption.text} </button>
                 )}
-                {/* <button onClick={handleClick} style={isClicked ? btnActiveStyling : {}} >Flashcards</button>
-                <button>Files</button>
-                <button>Posts</button>
-                <button>Saved</button> */}
             </div>
-            <button className='menuCreatedBtn'>Created <i className="bi bi-chevron-down"></i></button>
-            <img src={Questions} width="10%" />
-            <button className='menuCreateFlashcard'>Create Flashcards <i className="bi bi-chevron-down"></i></button>
-
-
-
+            <UserInfo activeMenuOption={btnClicked[activeMenuOption.get()].text} />
         </>
     )
 }

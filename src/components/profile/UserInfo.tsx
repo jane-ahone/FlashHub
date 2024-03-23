@@ -1,31 +1,21 @@
 import React from 'react'
-import Avatar from './Avatar'
-import Follow from './Follow'
-import UserAccountDetails from './UserAccountDetails'
-import "./UserInfo.css"
+import SelectAutoWidth from './SelectBtn'
+import './UserInfo.css'
+import UserActivity from './UserActivity'
+import { CustomState, useCustomState } from '../utils';
 
-interface Props {
-    avatarName: string
-    bgColour: Object
-    usersname: string
+
+interface UserInfoProps {
+    activeMenuOption: string
 }
+// Passing prop so it can be updated in SelectAutoWidth
 
-const UserInfo = ({ avatarName, bgColour, usersname }: Props) => {
+const UserInfo = ({ activeMenuOption }: UserInfoProps) => {
+    let selectOptionBtn = useCustomState<string>('Created')
     return (
-        <div className='userInfoMain'>
-            <Avatar avatarName={avatarName} bgColour={bgColour} />
-            <p className='userName'>{usersname}
-                <Follow />
-            </p>
-            <p className='userBio'>Lorem ipsum dolor sit amet consectetur <br /> adipisicing elit</p>
-
-            <div className="profileUserAccountDetails">
-                <UserAccountDetails AccountDetailName="Flashcards Created" />
-                <UserAccountDetails AccountDetailName="Posts" />
-                <UserAccountDetails AccountDetailName="Friends" />
-            </div>
-
-
+        <div className='UserInfoMain'>
+            <SelectAutoWidth selectOptionBtn={selectOptionBtn} />
+            <UserActivity activeMenuOption={activeMenuOption} selectOptionBtn={selectOptionBtn} />
         </div>
     )
 }
