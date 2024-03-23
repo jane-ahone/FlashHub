@@ -122,9 +122,7 @@ export function parseCookies(loginState: CustomState<LoginData>, activePageState
             }).catch((error) => {
                 console.error(error);
             });
-
         }
-
     });
 }
 

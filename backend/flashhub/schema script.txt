@@ -1,0 +1,1 @@
+python3 manage.py graph_models users files social schools -g -o schema.png

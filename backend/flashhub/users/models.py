@@ -26,7 +26,7 @@ class User(models.Model):
     user_type = models.CharField(
         max_length=100, choices=UserType.choices, default=UserType.STUDENT
     )
-    directory_id = models.CharField(max_length=100, unique=True)
+    directory_id = models.IntegerField(blank=True, null=True)
     profile_url = models.URLField(max_length=100, blank=True, null=True)
 
     indexes = [
@@ -72,6 +72,9 @@ class UserToken(models.Model):
 class UserCourses(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    directory_id = models.ForeignKey(
+        "files.Directory", on_delete=models.CASCADE, null=True
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

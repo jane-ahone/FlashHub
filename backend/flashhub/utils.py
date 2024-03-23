@@ -57,7 +57,6 @@ def get_valid_decoded_flashub_jwt(jwt_token: str) -> dict:
 
 
 def get_request_jwt(request: Request) -> str:
-    print(request.data)
     request_jwt = request.data.get("jwt")
     if not request_jwt:
         raise ValidationError("No JWT provided")

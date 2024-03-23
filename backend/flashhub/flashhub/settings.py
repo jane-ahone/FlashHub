@@ -30,7 +30,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["http://localhost:3000", "localhost"]
+ALLOWED_HOSTS = ["http://localhost:3000", "localhost", "http://127.0.0.1:8000", "*"]
 
 # Application definition
 

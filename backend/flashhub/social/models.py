@@ -44,6 +44,12 @@ class Post(models.Model):
     message = models.ForeignKey(Message, on_delete=models.CASCADE)
     reply_to = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True)
 
+    indexes = [
+        models.Index(fields=['author', 'message']),
+        models.Index(fields=['author']),
+        models.Index(fields=['message']),
+    ]
+
     def __str__(self):
         return self.author + " : " + self.message
     
