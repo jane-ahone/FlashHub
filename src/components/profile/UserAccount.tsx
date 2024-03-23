@@ -16,7 +16,7 @@ interface Props {
 const UserAccount = ({ loginState, usersname }: Props) => {
     return (
         <div className='userInfoMain'>
-            <img src={loginState.get().profilePicUrl} alt={loginState.get().name} className='usersAvatar' />
+            <img src={loginState.get().profile_url} alt={loginState.get().username} className='usersAvatar' />
             <p className='userName'>{usersname}
                 <Follow />
             </p>

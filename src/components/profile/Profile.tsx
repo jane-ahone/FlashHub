@@ -3,14 +3,14 @@ import Avatar from "./Avatar"
 import UserAccount from "./UserAccount"
 import Menu from "./Menu"
 import "./Profile.css"
-import { activePage, LoginState, CustomState } from '../utils';
+import { activePage, LoginData, CustomState, LoginState } from '../utils';
 
 
 
 interface ProfileProps {
     avatarName: string,
     usersname: string
-    loginState: CustomState<LoginState>
+    loginState: CustomState<LoginData>
 }
 
 

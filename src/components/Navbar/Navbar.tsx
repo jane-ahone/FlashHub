@@ -10,10 +10,10 @@ import Box from '@mui/material/Box';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import "./Navbar.css"
-import { activePage, LoginState, CustomState } from '../utils';
+import { activePage, LoginData, CustomState } from '../utils';
 
 interface NavbarProps {
-    loginState: CustomState<LoginState>,
+    loginState: CustomState<LoginData>,
     activePageState: CustomState<activePage>,
 }
 
@@ -67,7 +67,7 @@ export default function Navbar(props: NavbarProps): JSX.Element {
                                     (<Box sx={{ flexGrow: 0 }}>
                                         <Tooltip title="Open settings">
                                             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                                <Avatar src={loginState.get().profilePicUrl} alt={loginState.get().name} />
+                                                <Avatar src={loginState.get().profile_url} alt={loginState.get().first_name + " " + loginState.get().last_name} />
                                             </IconButton>
                                         </Tooltip>
                                         <Menu

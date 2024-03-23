@@ -7,6 +7,7 @@ import jwt
 from social.models import Notification, Message
 from users.models import User, UserToken
 from rest_framework.request import Request
+from typing import Tuple
 
 # constants
 JWT_ISSUER = "flashhub"
@@ -14,7 +15,7 @@ WAIT_DAYS_AFTER_FRIEND_REQUEST = 30
 
 
 # helper functions
-def get_jwt_keys() -> tuple[str, str]:
+def get_jwt_keys() -> Tuple[str, str]:
     load_dotenv()
     passphrase = os.environ.get("KEY_PASSPHRASE")
     if not passphrase:
@@ -56,6 +57,7 @@ def get_valid_decoded_flashub_jwt(jwt_token: str) -> dict:
 
 
 def get_request_jwt(request: Request) -> str:
+    print(request.data)
     request_jwt = request.data.get("jwt")
     if not request_jwt:
         raise ValidationError("No JWT provided")

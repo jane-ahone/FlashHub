@@ -2,28 +2,31 @@ import './App.css';
 import Navbar from './components/Navbar/Navbar';
 import Login from './components/Login/Login';
 import Signup from './components/Login/Signup';
-import { useCustomState, LoginState, activePage, parseCookies } from './components/utils';
+import { useCustomState, LoginData, activePage, parseCookies } from './components/utils';
 import { Api, MockApi } from './components/api/api';
 import FlashCard from './components/FlashCard/FlashCard';
 import { Card } from './components/FlashCard/utils';
 import { useEffect } from 'react';
 import google_oauth_client from './components/api/google_oauth_client.json';
 import Profile from './components/profile/Profile';
+import { LoginState } from './components/utils';
 function App() {
 
-    const api = new MockApi();
-    const loginState = useCustomState<LoginState>(new LoginState());
+    const api: Api = new MockApi();
+    const loginState = useCustomState<LoginData>(new LoginState());
     const activePageState = useCustomState<activePage>("login");
     const cards = useCustomState<Card[]>([]);
     const clientId = useCustomState<string>('');
 
     useEffect(() => {
 
-        parseCookies(loginState, activePageState);
+        parseCookies(loginState, activePageState, api);
+
         api.getCards('flashcard_id').then((response) => {
             console.log(response);
             cards.set(response);
         }
+
         ).catch((error) => {
             console.error(error);
         });
@@ -40,7 +43,7 @@ function App() {
                     case "flashcard":
                         return <FlashCard cards={cards} />;
                     case "profile":
-                        return <Profile avatarName={loginState.get().name[0]} usersname={loginState.get().name} loginState={loginState} />
+                        return <Profile avatarName={loginState.get().first_name} usersname={loginState.get().username} loginState={loginState} />
                     default:
                         return <Login api={api} loginState={loginState} activePageState={activePageState} clientId={clientId} />;
                 }
