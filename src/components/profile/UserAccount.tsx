@@ -6,18 +6,17 @@ import "./UserAccount.css"
 import { LoginState, CustomState } from '../utils'
 
 interface Props {
-    usersname: string
     loginState: CustomState<LoginState>
 }
 
 
 
 
-const UserAccount = ({ loginState, usersname }: Props) => {
+const UserAccount = ({ loginState }: Props) => {
     return (
         <div className='userInfoMain'>
             <img src={loginState.get().profile_url} alt={loginState.get().username} className='usersAvatar' />
-            <p className='userName'>{usersname}
+            <p className='userName'>{loginState.get().getFullName()}
                 <Follow />
             </p>
             <p className='userBio'>Lorem ipsum dolor sit amet consectetur <br /> adipisicing elit</p>

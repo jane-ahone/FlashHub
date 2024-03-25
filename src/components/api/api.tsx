@@ -1,4 +1,4 @@
-import { LoginData } from "../utils";
+import { LoginData, LoginState } from "../utils";
 import { Card } from "../FlashCard/utils";
 import { verifyAndDecodeJWT } from "../utils";
 
@@ -9,7 +9,7 @@ export const googleJWKSUri = 'https://www.googleapis.com/oauth2/v3/certs';
 export class Api {
     private baseUrl = 'http://localhost:8000';
 
-    public async login(jwt: string): Promise<LoginData> {
+    public async login(jwt: string): Promise<LoginState> {
         const data = JSON.stringify({ jwt: jwt });
         console.log('data:', data);
         const response = await fetch(`${this.baseUrl}/login`, {
@@ -25,13 +25,13 @@ export class Api {
         console.log('flash_api_resp:', flash_api_resp);
 
         const user = await this.get_user(flash_api_resp);
-        user.expiry = result['exp'];
+        user.expiry = result['exp'] * 10000;
         user.jwt = flash_api_resp;
 
         return user;
     }
 
-    public async get_user(jwt: string): Promise<LoginData> {
+    public async get_user(jwt: string): Promise<LoginState> {
         const response = await fetch(`${this.baseUrl}/user`, {
             method: 'POST',
             headers: {
@@ -40,13 +40,32 @@ export class Api {
             body: JSON.stringify({ jwt: jwt }),
         });
         const result: LoginData = await response.json();
-        result.isLogged = true;
-        return result;
+        const loginState = new LoginState(
+            result.username,
+            result.jwt,
+            result.email,
+            result.id,
+            result.school,
+            result.profile_url,
+            true,
+            result.expiry,
+            result.first_name,
+            result.last_name,
+            result.phone,
+            result.user_type,
+            result.courses,
+            result.friends_count,
+            result.pending_sent_requests,
+            result.pending_received_requests,
+
+
+        )
+        return loginState;
     }
 
 
 
-    public async signup(name: string, email: string, userName: string, password: string): Promise<LoginData> {
+    public async signup(name: string, email: string, userName: string, password: string): Promise<LoginState> {
         const response = await fetch(`${this.baseUrl}/signup`, {
             method: 'POST',
             headers: {

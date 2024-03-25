@@ -1,9 +1,9 @@
 import { FormEvent } from 'react';
-import { useCustomState, LoginData, CustomState, activePage, handleLogin } from '../utils';
+import { useCustomState, CustomState, activePage, handleLogin, LoginState } from '../utils';
 import { Api } from '../api/api';
 interface SignupProps {
     api: Api;
-    loginState: CustomState<LoginData>;
+    loginState: CustomState<LoginState>;
     activePageState: CustomState<activePage>;
 }
 

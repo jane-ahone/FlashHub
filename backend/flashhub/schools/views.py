@@ -26,12 +26,29 @@ def dev_setup(_request: Request) -> Response:
         website="https://www.kent.edu/",
         email_domain="kent.edu",
     )
+    gmail = School.objects.create(
+        name="Google University",
+        address="800 E Summit St",
+        city="Kent",
+        state="OH",
+        zip="44240",
+        phone="330-672-3000",
+        email="admin@gmail.com",
+        website="https://www.google.com",
+        email_domain="gmail.com",
+    )
 
     # create first course (cs1)
-    cs1 = Course.objects.create(
+    Course.objects.create(
         name="CS1",
         description="Introduction to Computer Science",
         school=kent_state,
+        course_code="CS1",
+    )
+    Course.objects.create(
+        name="CS1",
+        description="Introduction to Computer Science",
+        school=gmail,
         course_code="CS1",
     )
 

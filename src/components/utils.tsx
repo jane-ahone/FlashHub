@@ -102,11 +102,16 @@ export class LoginState implements LoginData {
         this.pending_received_requests = pending_received_requests;
 
     }
+    public getFullName() {
+        return this.first_name + ' ' + this.last_name;
+
+    }
 }
 
 export type activePage = "login" | "home" | "profile" | "class" | "settings" | "logout" | "flashcard" | "about";
 
-export function parseCookies(loginState: CustomState<LoginData>, activePageState: CustomState<activePage>, api: Api) {
+export function parseCookies(loginState: CustomState<LoginState>, activePageState: CustomState<activePage>, api: Api) {
+    console.log(document.cookie);
     document.cookie.split(';').forEach(function (cookie) {
         const [name, value] = cookie.split('=').map(c => c.trim());
         if (name === "jwt" && value !== "" && value !== "null" && value !== "undefined") {
@@ -128,9 +133,10 @@ export function parseCookies(loginState: CustomState<LoginData>, activePageState
 
 export function updateCookie(data: LoginData) {
     document.cookie = "jwt=" + data.jwt + "; expires=" + new Date(data.expiry).toUTCString();
+    console.log(data.expiry, new Date(data.expiry).toUTCString());
 }
 
-export function handleLogin(loginState: CustomState<LoginData>, activePage: CustomState<activePage>, response: LoginData) {
+export function handleLogin(loginState: CustomState<LoginState>, activePage: CustomState<activePage>, response: LoginState) {
     loginState.set(response);
     activePage.set("flashcard");
     updateCookie(response);
