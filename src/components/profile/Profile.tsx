@@ -9,8 +9,7 @@ import { activePage, LoginData, CustomState, LoginState } from '../utils';
 
 interface ProfileProps {
     avatarName: string,
-    usersname: string
-    loginState: CustomState<LoginData>
+    loginState: CustomState<LoginState>
 }
 
 
@@ -19,7 +18,7 @@ const Profile = (props: ProfileProps) => {
     return (
         <div>
             <div className="profileMainRest">
-                <UserAccount loginState={props.loginState} usersname={props.usersname} />
+                <UserAccount loginState={props.loginState} />
                 <Menu />
             </div>
 

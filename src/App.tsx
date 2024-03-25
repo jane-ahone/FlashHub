@@ -1,7 +1,6 @@
 import './App.css';
 import Navbar from './components/Navbar/Navbar';
 import Login from './components/Login/Login';
-import Signup from './components/Login/Signup';
 import { useCustomState, LoginData, activePage, parseCookies } from './components/utils';
 import { Api, MockApi } from './components/api/api';
 import FlashCard from './components/FlashCard/FlashCard';
@@ -13,7 +12,7 @@ import { LoginState } from './components/utils';
 function App() {
 
     const api: Api = new MockApi();
-    const loginState = useCustomState<LoginData>(new LoginState());
+    const loginState = useCustomState<LoginState>(new LoginState());
     const activePageState = useCustomState<activePage>("login");
     const cards = useCustomState<Card[]>([]);
     const clientId = useCustomState<string>('');
@@ -43,7 +42,7 @@ function App() {
                     case "flashcard":
                         return <FlashCard cards={cards} />;
                     case "profile":
-                        return <Profile avatarName={loginState.get().first_name} usersname={loginState.get().username} loginState={loginState} />
+                        return <Profile avatarName={loginState.get().first_name} loginState={loginState} />
                     default:
                         return <Login api={api} loginState={loginState} activePageState={activePageState} clientId={clientId} />;
                 }

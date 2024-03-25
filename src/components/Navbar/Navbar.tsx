@@ -10,10 +10,10 @@ import Box from '@mui/material/Box';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import "./Navbar.css"
-import { activePage, LoginData, CustomState } from '../utils';
+import { activePage, CustomState, LoginState } from '../utils';
 
 interface NavbarProps {
-    loginState: CustomState<LoginData>,
+    loginState: CustomState<LoginState>,
     activePageState: CustomState<activePage>,
 }
 
@@ -50,7 +50,7 @@ export default function Navbar(props: NavbarProps): JSX.Element {
             {/* Add an if statement */}
             <span className='appName' onClick={() => {
                 if (loginState.get().isLogged) {
-                    handleClick("home")
+                    handleClick("flashcard")
                 }
 
             }}>FLASH HUB</span>
@@ -59,10 +59,11 @@ export default function Navbar(props: NavbarProps): JSX.Element {
                     {(() => {
                         switch (activePageState.get()) {
                             case "login":
-                                return <Button color="inherit" onClick={() => handleClick("home")}>  Home  </Button>;
+                                return <Button color="inherit" onClick={() => handleClick("login")}>  Home  </Button>;
+                                break;
                             default:
                                 const items = [
-                                    (<Button color="inherit" sx={{ color: 'white', '&': { padding: '0px 20px' } }} onClick={() => handleClick("login")}  >  Login  </Button>),
+                                    (<Button color="inherit" sx={{ color: 'white', '&': { padding: '0px 20px' } }} onClick={() => handleClick("home")}  >  Home  </Button>),
                                     (<Button color="inherit" sx={{ color: 'white', '&': { padding: '0px 20px' } }} onClick={() => handleClick("about")}>  About Us  </Button>),
                                     (<Box sx={{ flexGrow: 0 }}>
                                         <Tooltip title="Open settings">
