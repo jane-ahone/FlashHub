@@ -26,7 +26,7 @@ class User(models.Model):
     user_type = models.CharField(
         max_length=100, choices=UserType.choices, default=UserType.STUDENT
     )
-    directory_id = models.IntegerField(blank=True, null=True)
+    directory_id = models.IntegerField(default = None, null=True)
     profile_url = models.URLField(max_length=100, blank=True, null=True)
 
     indexes = [
@@ -38,11 +38,6 @@ class User(models.Model):
 
     def __str__(self):
         return self.first_name + " " + self.last_name
-
-    def save(self, *args, **kwargs):
-        self.directory_id = f"{self.__class__.__name__}-{self.id}"
-        super(User, self).save(*args, **kwargs)
-
 
 class UserToken(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

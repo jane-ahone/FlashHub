@@ -4,6 +4,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from users.models import FriendRequestStatus, Friends, User, UserCourses, UserToken
 from schools.models import Course, School
+from files.models import Directory
 from utils import (
     WAIT_DAYS_AFTER_FRIEND_REQUEST,
     get_ecdsa_jwt_public_key,
@@ -78,7 +79,7 @@ def login(request: Request) -> Response:  # currently only via google OAuth2
         first_name = id_info["given_name"].capitalize()
         last_name = id_info["family_name"].capitalize()
         picture = id_info["picture"]
-        email_domain = id_info["hd"].lower()
+        email_domain = id_info["hd"].lower() if 'hd' in id_info else 'gmail.com'
 
         # check if user exists and create if not
         user = User.objects.filter(email=email)
@@ -98,16 +99,22 @@ def login(request: Request) -> Response:  # currently only via google OAuth2
 
             # if not school:
             #     return Response({'error': 'Sorry, Your School is not yet supported by FlashHub. Stay Tuned!!'}, status=404)
-
             user = User(
                 first_name=first_name,
                 last_name=last_name,
+                directory_id = 0,
                 email=email,
                 profile_url=picture,
                 username=username,
                 school=school,
             )
 
+            user.save()
+            directory = Directory.objects.create(
+                name = first_name+' '+last_name,
+                user = user
+            )
+            user.directory_id=directory.id 
             user.save()
         else:
             user = user[0]

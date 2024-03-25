@@ -1,14 +1,12 @@
 import { GoogleOAuthProvider } from '@react-oauth/google'
 import { GoogleLogin } from '@react-oauth/google';
-import { jwtDecrypt } from 'jose';
-import React, { useEffect } from 'react'
-import { CustomState, LoginData, activePage, handleLogin } from '../utils';
+import { CustomState, LoginState, activePage, handleLogin } from '../utils';
 import { Api } from './api';
 
 interface GoogleAuthProps {
     clientId: string;
     activePageState: CustomState<activePage>;
-    loginState: CustomState<LoginData>;
+    loginState: CustomState<LoginState>;
     api: Api;
 }
 
