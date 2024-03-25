@@ -102,6 +102,27 @@ export class LoginState implements LoginData {
         this.pending_received_requests = pending_received_requests;
 
     }
+
+    public static fromLoginData(data: LoginData): LoginState {
+        return new LoginState(
+            data.username,
+            data.jwt,
+            data.email,
+            data.id,
+            data.school,
+            data.profile_url,
+            data.isLogged,
+            data.expiry,
+            data.first_name,
+            data.last_name,
+            data.phone,
+            data.user_type,
+            data.courses,
+            data.friends_count,
+            data.pending_sent_requests,
+            data.pending_received_requests
+        );
+    }
 }
 
 export type activePage = "login" | "home" | "profile" | "class" | "settings" | "logout" | "flashcard" | "about";
@@ -136,10 +157,10 @@ export function handleLogin(loginState: CustomState<LoginData>, activePage: Cust
     updateCookie(response);
 }
 
-export async function verifyAndDecodeJWT(token: string, jwksUri: string = googleJWKSUri) {
+export async function verifyAndDecodeJWT(token: string, jwksUri: string = googleJWKSUri, iss: { issuer: string } = { issuer: 'https://accounts.google.com' }) {
     try {
         const { payload, protectedHeader } = await jwtVerify(token, async (header) => {
-            // Fetch Google's JWKS (JSON Web Key Set)
+            // Fetch JSON Web Key Set
             const response = await fetch(jwksUri);
             const jwks = await response.json();
 
@@ -151,9 +172,7 @@ export async function verifyAndDecodeJWT(token: string, jwksUri: string = google
 
             // Construct and return the appropriate public key to verify the JWT
             return await importJWK(signingKey, header.alg);
-        }, {
-            issuer: 'https://accounts.google.com',
-        });
+        }, iss);
         return JSON.parse(JSON.stringify(payload));
     } catch (error) {
         console.error('Failed to verify JWT:', error);
