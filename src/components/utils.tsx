@@ -111,7 +111,6 @@ export class LoginState implements LoginData {
 export type activePage = "login" | "home" | "profile" | "class" | "settings" | "logout" | "flashcard" | "about";
 
 export function parseCookies(loginState: CustomState<LoginState>, activePageState: CustomState<activePage>, api: Api) {
-    console.log(document.cookie);
     document.cookie.split(';').forEach(function (cookie) {
         const [name, value] = cookie.split('=').map(c => c.trim());
         if (name === "jwt" && value !== "" && value !== "null" && value !== "undefined") {
@@ -133,7 +132,6 @@ export function parseCookies(loginState: CustomState<LoginState>, activePageStat
 
 export function updateCookie(data: LoginData) {
     document.cookie = "jwt=" + data.jwt + "; expires=" + new Date(data.expiry).toUTCString();
-    console.log(data.expiry, new Date(data.expiry).toUTCString());
 }
 
 export function handleLogin(loginState: CustomState<LoginState>, activePage: CustomState<activePage>, response: LoginState) {
