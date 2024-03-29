@@ -40,27 +40,9 @@ export class Api {
             body: JSON.stringify({ jwt: jwt }),
         });
         const result: LoginData = await response.json();
-        const loginState = new LoginState(
-            result.username,
-            result.jwt,
-            result.email,
-            result.id,
-            result.school,
-            result.profile_url,
-            true,
-            result.expiry,
-            result.first_name,
-            result.last_name,
-            result.phone,
-            result.user_type,
-            result.courses,
-            result.friends_count,
-            result.pending_sent_requests,
-            result.pending_received_requests,
+        result.isLogged = true;
 
-
-        )
-        return loginState;
+        return LoginState.fromLoginData(result);
     }
 
 
